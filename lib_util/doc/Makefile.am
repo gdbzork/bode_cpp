@@ -1,0 +1,7 @@
+ACLOCAL_AMFLAGS = -I m4
+
+if HAVE_DOXYGEN
+  DOXYDIR = doxygen
+endif
+
+SUBDIRS = $(DOXYDIR)
