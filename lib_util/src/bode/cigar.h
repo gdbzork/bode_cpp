@@ -4,7 +4,7 @@
 #include <string>
 #include <exception>
 
-#include <sam/bam.h>
+#include <htslib/sam.h>
 
 #define MAX_CIG_LEN 1024
 

@@ -32,6 +32,7 @@ if test x"$debugit" = x"yes"; then
 fi
 
 AC_CHECK_LIB([hts],[bam_init1])
+AC_CHECK_HEADERS([htslib/sam.h])
 
 AC_SUBST([AM_CXXFLAGS])
 AC_SUBST([CXXFLAGS])

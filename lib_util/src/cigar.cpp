@@ -1,5 +1,7 @@
 #include <string>
+#include <cstring>
 #include <sstream>
+#include <cstdlib>
 
 #include <htslib/sam.h>
 
@@ -25,7 +27,7 @@ bode::Cigar::Cigar(uint32_t len,uint32_t *data) {
 bode::Cigar::Cigar(bam1_t *bam) {
   uint32_t *data;
   ciglen = bam->core.n_cigar;
-  data = bam1_cigar(bam);
+  data = bam_get_cigar(bam);
   for (int i=0;i<ciglen;i++) {
     cig[i] = data[i];
   }
