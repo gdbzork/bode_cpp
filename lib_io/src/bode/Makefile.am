@@ -7,7 +7,5 @@ bodeinclude_HEADERS = bamReader.h          \
                       fastaReader.h        \
                       fastqReader.h        \
                       intervalReader.h     \
-                      samReader.h          \
-                      samWriter.h          \
                       sequenceReader.h     \
                       writer.h
