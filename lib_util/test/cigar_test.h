@@ -2,7 +2,7 @@
 #define CXXTEST_ABORT_TEST_ON_FAIL true
 #include <cxxtest/TestSuite.h>
 #include <string>
-#include <sam/bam.h>
+#include <htslib/sam.h>
 #include "bode/cigar.h"
 
 class CigarTest: public CxxTest::TestSuite {

@@ -1,8 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <string.h>
-#include <sam/bam.h>
-#include <sam/sam.h>
+#include <cstdio>
+#include <htslib/sam.h>
 
 #include "bode/sequence.h"
 #include "bode/interval.h"
@@ -12,11 +12,11 @@
 int bode::Bam::nucleotideMap[] = {'X','A','C','X','G','X','X','X','T',
                                   'X','X','X','X','X','X','X','X','N'};
 
-bode::Bam::Bam(bam1_t *raw,bam_header_t *hdr) {
+bode::Bam::Bam(bam1_t *raw,bam_hdr_t *hdr) {
   _raw = raw;
   _hdr = hdr;
   setInterval();
-  _name = std::string(bam1_qname(_raw));
+  _name = std::string(bam_get_qname(_raw));
   _seq = std::string();
   _null = false;
   seq(_seq);
@@ -35,7 +35,7 @@ bode::Bam::Bam(bode::Bam const &b) {
   _raw = b._raw;
   _hdr = b._hdr;
   setInterval();
-  _name = std::string(bam1_qname(_raw));
+  _name = std::string(bam_get_qname(_raw));
   _seq = std::string();
   _seq = b._seq;
   _null = b._null;
@@ -72,11 +72,11 @@ bool bode::operator<(bode::Bam const &l,bode::Bam const &r) {
 int bode::Bam::seq(std::string &dest) const {
   uint8_t *ch;
   int i;
-  ch = bam1_seq(_raw);
+  ch = bam_get_seq(_raw);
   dest.clear();
   dest.reserve(_raw->core.l_qseq+1);
   for (i=0;i<_raw->core.l_qseq;i++) {
-    char nuc = nucleotideMap[bam1_seqi(ch,i)];
+    char nuc = nucleotideMap[bam_seqi(ch,i)];
     dest += nuc;
   }
   return 1;
@@ -85,9 +85,9 @@ int bode::Bam::seq(std::string &dest) const {
 void bode::Bam::update(bam1_t *raw) {
   _raw = raw;
   if (_name.length() == 0) {
-    _name = std::string(bam1_qname(_raw));
+    _name = std::string(bam_get_qname(_raw));
   } else {
-    _name.assign(bam1_qname(_raw));
+    _name.assign(bam_get_qname(_raw));
   }
   _seq = std::string();
   _null = false;
@@ -117,10 +117,6 @@ void bode::Bam::setUnmapped(void) {
   }
 }
 
-void bode::Bam::bwrite(samfile_t *fd) const {
-  samwrite(fd,_raw);
-}
-
 void bode::Bam::setInterval(void) {
   if (_raw != NULL) {
     _mapped = !(_raw->core.flag&BAM_FUNMAP);
@@ -133,7 +129,7 @@ void bode::Bam::setInterval(void) {
       _left = _raw->core.pos;
       _right = _raw->core.pos + cig.refLength();
       _chrom = _hdr->target_name[_raw->core.tid];
-      _strand = bam1_strand(_raw) == 0 ? '+' : '-';
+      _strand = bam_is_rev(_raw) ? '-' : '+';
     }
   } else {
     _mapped = false;

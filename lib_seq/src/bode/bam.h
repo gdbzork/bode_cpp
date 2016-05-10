@@ -8,8 +8,7 @@
  * This is a test.
  */
 
-#include <sam/bam.h>
-#include <sam/sam.h>
+#include <htslib/sam.h>
 
 #include "interval.h"
 #include "sequence.h"
@@ -22,7 +21,7 @@ namespace bode {
  * This is more information about the BAM class. */
 class Bam: public Interval, public Sequence {
   public:
-    Bam(bam1_t *raw,bam_header_t *hdr);
+    Bam(bam1_t *raw,bam_hdr_t *hdr);
     Bam(void);
     Bam(Bam const &b);
     Bam &operator=(Bam const &b);
@@ -31,15 +30,15 @@ class Bam: public Interval, public Sequence {
     friend bool operator<(Bam const &l,Bam const &r);
 
     int seq(std::string &dest) const;
-    void setHeader(bam_header_t *hdr)                           { _hdr = hdr; };
+    void setHeader(bam_hdr_t *hdr)                           { _hdr = hdr; };
     void update(bam1_t *raw);
     void update(std::string const &chr,int l,int r);
     void setUnmapped(void);
-    void bwrite(samfile_t *fd) const;
+    const bam1_t *raw(void) const { return _raw; };
 
   protected:
     bam1_t *_raw;
-    bam_header_t *_hdr;
+    bam_hdr_t *_hdr;
 
     void setInterval(void);
     int32_t chromIndex(std::string const &chr);

@@ -1,0 +1,17 @@
+Notes on BamPairs class
+=======================
+
+bamPool class:
+ - get "blank" bam object
+ - get from pool if pool non-empty
+ - return to pool
+ - empty pool
+ - pool size
+
+bamPairs class:
+ - open(bamFile)
+ - close() - can re-open with new file
+ - next() - read until you have a pair, return the pair
+ - header () 
+ - poolSize()
+ - pendingSize()
