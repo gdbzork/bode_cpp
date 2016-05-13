@@ -13,9 +13,9 @@ class Interval {
     Interval(std::string const &chr,int l,int r);
     Interval(std::string const &chr,int l,int r,double s);
     Interval(std::string const &chr,int l,int r,double s,char st);
-    Interval(void)                                         { _mapped = false; };
+    Interval(void);
     Interval(Interval const &i);
-    virtual ~Interval(void) {};
+    virtual ~Interval(void);
     Interval &operator=(Interval const &i);
     friend bool operator==(Interval const &l,Interval const &r);
     friend bool operator<(Interval const &l,Interval const &r);

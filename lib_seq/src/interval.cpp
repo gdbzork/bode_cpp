@@ -38,6 +38,14 @@ bode::Interval::Interval(Interval const &i) {
   _strand = i._strand;
 }
 
+bode::Interval::Interval(void) {
+  _mapped == false;
+}
+
+bode::Interval::~Interval(void) {
+  // nothing to see here
+}
+
 bode::Interval &bode::Interval::operator=(Interval const &i) {
   if (this != &i) {
     _chrom = i._chrom;
