@@ -1,0 +1,83 @@
+Overview
+--------
+
+There are 4 main steps in generating the heat maps:
+
+1) Generate a CFF file ("Centre Feature Format"), describing the centres
+of the regions, in some suitable order (usually strongest to weakest, by
+peak strength).  In our case the centres are usually ChIP-seq summits, but
+they could equally well be TSS's, motifs, or whatever is of interest.
+
+2) Given the CFF file and a bed file of reads, generate counts for 100bp
+(or your chosen width) bins around the centres in CDT format (we usually
+use a 10Kb window centred on the summit, but obviously that's
+configurable).  We use this custom program, originally written by Dominic
+Schmidt in Python, then re-written by me in C++ for better performance, but
+other tools (e.g. bedtools, RSamtools) can also generate bin counts (i.e.
+density plots) (though the format might need tweaking for the next step).
+
+3) Make the image.  We use Java TreeView (though that's not its original
+purpose).  Sooner or later I will write a little stand-alone program to
+make the plots, which is quite straightforward, but (as usual) just
+haven't got around to it.  The advantage of TreeView is that you can tune
+the parameters (colour intensities and so on) to make the figure come out
+a little cleaner.
+
+4) If you're showing multiple heat maps side-by-side (the usual case),
+then assemble them into a figure using your graphics editing tool of
+choice (usually Illustrator for us).  Someday this might be made
+automatic, but not today.
+
+Requirements
+------------
+
+1) A reasonably standards-compliant C++ compiler (tested on g++), and the
+usual development tools (make, etc).
+
+2) The samtools library, with the header files in /usr/local/include/sam or
+some other suitable place, and libbam.a in /usr/local/lib (or some suitable
+place).  (Or you can tweak the makefile to tell it where to find them.)
+
+Compilation
+-----------
+
+Type "make" in the top-level directory.
+
+Usage
+-----
+
+Should work on linux, MacOS, probably not on Windows (maybe under Cygwin).
+It's a bit memory-intensive, since it loads the whole reads file into a tree
+structure, but not too bad... maybe 2Gb for 100M reads.  The CFF file is a
+4-column format:
+
+chrom position name score
+
+Usage is:
+
+makeCDT [options] <reads> <regions> <output>
+
+where the <reads> can be bam, bed, compressed bed; <regions> are CFF;
+output is CDT format (suitable for TreeView).
+
+Options are (defaults in square brackets):
+
+	--bins [100]      : number of bins
+	--binwidth [100]  : width of bins
+	--dom             : match Dom's version exactly
+	--help            : display help on program
+	--input []        : background/input file
+	--norm [10000000] : number of reads to normalize to
+	--version         : version of the program
+
+Dominic's original version counted a bit strangely... a read was counted
+in an interval if its left end was in the interval, rather than (say) its
+middle.  So I fixed it, but included the "--dom" option to reproduce his
+results exactly.
+
+You can include an input bam/bed file that will be subtracted from the
+main reads file.
+
+You can normalise to a fixed number of reads, so different heat maps will
+be visually comparable.
+
