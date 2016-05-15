@@ -1,0 +1,92 @@
+screenLinker
+------------
+
+This program screens Fasta or Fastq sequences against adapter/linker
+sequences, masking off or removing the linker.  The core algorithm is
+end-gaps-free alignment: global alignment, but with no penalty for gaps
+occurring at the end of one sequence or the other.  This algorithm is
+suitable for finding overlaps between sequences, which is what we expect
+in the linker-screening case.
+
+In the following example, the input sequence has useful data for the
+first 21 nucleotides, followed by the start of the linker.
+
+GATGAGGGGAGGCGAGAAAAATCGTATGCCGTCTT          -- input sequence
+                     TCGTATGCCGTCTTCTGCTTG   -- linker sequence
+
+Since the input may not exactly match the linker, the alignment approach
+allows for some mismatches and indels.
+
+If a sequence is entirely linker, it is discarded.
+
+One problem is multiple linkers (two linkers have ligated together, and
+are read as one sequence).  To ensure that double linkers are removed,
+this program screens sequences twice:  if linker is found (but it isn't
+the whole sequence) the remaining sequence is screened again.  This costs
+performance, obviously, but eliminates a large number of bad sequences.
+
+Limitations:
+------------
+This program is designed to be fast, not to be safe.  It doesn't do much
+error checking.  Input sequences must follow the Fasta or Fastq format
+exactly, with the additional limitation that each sequence must be less
+than 1024 characters, and must NOT span multiple lines.  Header lines
+must also not be longer than 1024 characters.
+
+Installation:
+-------------
+
+> make
+> cp screenLinker <wherever you put your executables>
+
+The program has been tested on Linux and MacOS 10.4, but should be portable
+to most platforms which have "make" and a C compiler.
+
+Usage:
+------
+
+> screenLinker [options] <linker.fasta> <inputfile> <outputfile>
+
+"linker.fasta" should contain exactly 2 linker sequences (3' and 5') in Fasta
+format.  "inputfile" may be Fasta or Fastq, but MUST respect the limitations
+given above.  "outputfile" must not exist (before the program starts); this
+program will not overwrite an existing file (unless -o is given).  Output is
+the same format as input (either Fasta or Fastq).
+
+Options:
+
+ -r   -- require the presence of linker.  That is, don't consider a sequence
+         as "good" unless trailing 3' linker is detected.  (This is usually
+         the right choice for miRNA screening.)  Default: do not require
+         linker.
+ -kNN -- minimum sequence length to keep (default 16).  If the sequence is
+         shorter than this length after linker is removed, it is discarded.
+ -f   -- screen out poor quality sequences (default: no screening).  Screening
+         is ususally a good idea.
+ -aNN -- set the mean quality threshold to NN (default 13).  Only relevant
+         if "-f" is specified and format is Fastq.
+ -pNN -- consider the first NN nucleotides when filtering for quality
+         (default 25).  Only relevant if "-f" also specified, and format is
+         Fastq.
+ -t   -- truncate linker sequences rather than masking them (default).
+ -n   -- mask linker sequence with "N" (and if Fastq format, set quality
+         values to zero).
+ -x   -- mask linker sequences with "X" (don't truncate).
+ -q   -- indicates that quality values are Solexa-style, not Phred-style.
+         Arguably this is a bug... the program should auto-detect the
+         quality scale.
+ -s<filename> -- save the "bad" output to this file: sequences that are all
+         linker, are low quality (if -f), or have no linker (if -r).
+         Default is to discard bad data.
+ -iFF -- set the percent identity required to recognize a region as linker.
+         (default 0.85).
+ -lNN -- set the length of a match to recognize a sequence as linker (default
+         15).  Note that if a match occurs at the end of the input read, and
+         is sufficiently high quality, it will be recognized as linker if it
+         is at least 5 nucleotides long; this parameter is intended to 
+         recognize sequences which are all (or mostly) linker.
+ -m<filename> -- filename in which to save sequences with no linker.
+         Only applicable if -r is specified.
+ -w   -- only discard reads if they are all (or mostly) linker.  Do not trim
+         reads with trailing linker.
+ -o   -- overwrite an existing output file.

@@ -1,0 +1,40 @@
+Basic syntax:
+
+makeWiggle [options] input.bed output_prefix
+
+where output_prefix is the prefix of the output filename.  For example, if you want the result to
+be named "zork.wig", you would use "zork" as the output_prefix.
+
+Options:
+
+-b -- file is in Bed format (default)
+-g -- file is GFF
+-m -- file is in MAQ format
+-o -- file is in Bowtie format
+-s -- file is Exonerate's "sugar" output format
+-c -- input file is compressed
+-1 -- output file should be one file (normally it splits the output into multiple files for
+      easier uploading to UCSC)
+-t nn -- threshold below which to discard points (e.g. -t 2 means don't show positions which
+         are one unit high
+-i nn -- interval at which to draw a line (default 10, probably want 1 if it's input to another
+         program
+-r nn -- how many lines to put in each file, if -1 is not specified 
+-n xxx -- name to use as track header in wiggle file (defaults to filename)
+-d xxx -- description in track header file (defaults to filename)
+-a xxx -- write wiggle file in form suitable for IGB (no longer needed)
+-B -- generate Bedgraph instead of Wiggle
+-q nn -- filter out reads with score less than nn
+-N nn -- normalize to nn reads (if you want to compare 2 wiggle files with different numbers of
+         reads
+
+INSTALL
+-------
+
+To compile on most platforms, just untar the package, cd to the directory,
+and type "make".
+
+Windows:
+--------
+Rafik Salama reports that the package compiles and runs under Cygwin on
+Windows, if both the "g++" and "make" packages are included.

@@ -1,0 +1,5 @@
+1) Translate to C++, especially IO stuff and calign
+2) Ensure correct usage of autotools
+3) Add paired-end feature
+4) Check whether there's any point searching for rev-comp of 3' linker, or
+forward 5' linker.  If not, stop wasting time.
