@@ -1,9 +1,10 @@
+#include <stdlib.h>
 #include <iostream>
 #include <string>
 #include <string.h>
 #include <ctype.h>
 
-#include <sam/bam.h>
+#include <htslib/sam.h>
 
 typedef struct {
   uint32_t val;
