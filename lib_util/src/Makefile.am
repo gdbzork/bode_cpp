@@ -10,6 +10,7 @@ libbodeutil_la_SOURCES = bitBucket.cpp       \
                          genomeData.cpp      \
                          histogram.cpp       \
                          intervalDensity.cpp \
+                         lineType.cpp        \
                          log.cpp             \
                          ticker.cpp          \
                          util.cpp

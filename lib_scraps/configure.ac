@@ -1,5 +1,6 @@
 AC_PREREQ([2.59])
 AC_INIT([BodeScraps], [1.0.0], [gdbzork@gmail.com])
+AC_CONFIG_AUX_DIR([auxdir])
 AM_INIT_AUTOMAKE([-Wall -Werror tar-pax])
 AC_CONFIG_SRCDIR([src/testWrite.c])
 

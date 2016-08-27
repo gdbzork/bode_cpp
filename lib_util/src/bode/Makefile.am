@@ -9,6 +9,7 @@ bodeinclude_HEADERS = bitBucket.h          \
                       genomeData.h         \
                       histogram.h          \
                       intervalDensity.h    \
+                      lineType.h           \
                       log.h                \
                       ticker.h             \
                       util.h
