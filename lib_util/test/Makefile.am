@@ -8,6 +8,7 @@ TESTS = bitBucket_test       \
         flags_test           \
         histogram_test       \
         intervalDensity_test \
+        lineType_test        \
         log_test             \
         util_test
 check_PROGRAMS = $(TESTS)
@@ -40,6 +41,8 @@ histogram_test_SOURCES = histogram_test.h
 nodist_histogram_test_SOURCES = histogram_test.cpp
 intervalDensity_test_SOURCES = intervalDensity_test.h
 nodist_intervalDensity_test_SOURCES = intervalDensity_test.cpp
+lineType_test_SOURCES = lineType_test.h
+nodist_lineType_test_SOURCES = lineType_test.cpp
 log_test_SOURCES = log_test.h
 nodist_log_test_SOURCES = log_test.cpp
 util_test_SOURCES = util_test.h
@@ -58,6 +61,7 @@ CLEANFILES = bitBucket_test.cpp \
              flags_test.cpp \
              histogram_test.cpp \
              intervalDensity_test.cpp \
+             lineType_test.cpp \
              log_test.cpp \
              util_test.cpp
 
